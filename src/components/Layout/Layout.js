@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import Aux from '../../hoc/Aux';
+import styles from './Layout.module.css';
 
-const layout = ( props ) => (
-    <Aux>
+const layout = ( props ) => ( 
+    <Fragment>
         <div>Toolbar, SideDrawer, Backdrop</div>
-        <main>
-            {props.childern}
+        <main className={styles.Content}>
+            {props.children}
         </main>
-    </Aux>
+    </Fragment>
 );
 
 export default layout;
