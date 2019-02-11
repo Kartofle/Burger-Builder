@@ -4,15 +4,15 @@ import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import styles from './Burger.module.css';
 
 const burger = ( props ) => {
-    const toppings = Object.keys( props.ingredients ).map( igKey => {
+    let toppings = Object.keys( props.ingredients ).map( igKey => {
         return [...Array( props.ingredients[igKey])].map(( _, i) => {
             return <BurgerIngredient key={igKey + i} type={igKey} />
         });
-    }).reduce(( arr, el ) => {
+    }).reduce((arr, el) => {
         return arr.concat(el)
     }, []);
-    if ( toppings === 0 ) {
-        toppings = <p>Please start adding ingredients</p>
+    if ( toppings.length === 0 ) {
+        toppings = <p>Please start adding ingredients.</p>;
     }
     return (
         <div className={styles.Burger}>
