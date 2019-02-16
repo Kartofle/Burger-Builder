@@ -4,9 +4,10 @@ import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import styles from './Burger.module.css';
 
 const burger = ( props ) => {
-    let toppings = Object.keys( props.ingredients ).map( igKey => {
-        return [...Array( props.ingredients[igKey])].map(( _, i) => {
-            return <BurgerIngredient key={igKey + i} type={igKey} />
+    let toppings = Object.keys( props.ingredients )
+        .map( igKey => {
+            return [...Array( props.ingredients[igKey])].map(( _, i) => {
+                return <BurgerIngredient key={igKey + i} type={igKey} />
         });
     }).reduce((arr, el) => {
         return arr.concat(el)
