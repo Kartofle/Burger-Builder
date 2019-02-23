@@ -13,12 +13,10 @@ const order = (props) => {
             </div>
             <Button 
                 btnType="Danger"
-
-                >CANCEL</Button>
+                onClick={props.checkoutCancelled} >CANCEL</Button>
             <Button 
                 btnType="Success"
-
-                >SUBMIT</Button>
+                onClick={props.checkoutContinued} >SUBMIT</Button>
         </div>
     )
 }
