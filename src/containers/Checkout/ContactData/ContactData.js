@@ -3,30 +3,59 @@ import React, { Component } from 'react';
 import styles from './ContactData.module.css'
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
+import Input from '../../../components/UI/Input/Input';
 import axios from '../../../axios-orders';
 
 class ContactData extends Component {
     state = {
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            zipCode: '',
+        orderForm: {
+            name: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Name'
+                },
+                value: ''
+            },
+            email: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'email',
+                    placeholder: 'Your eMail'
+                },
+                value: ''
+            },
+            address: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Address'
+                },
+                value: ''
+            },
+            zipCode: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'number',
+                    placeholder: 'Zip Code'
+                },
+                value: ''
+            }
         },
         loading: false
     }
 
     orderHandler = (event) => {
+        event.preventDefault();
         this.setState( { loading: true } );
+        const formData = {};
+        for ( let formElementId in this.state.orderForm ) {
+            formData[formElementId] = this.state.orderForm[formElementId].value;
+        }
         const order = {
             ingredients: this.props.ingredients,
             price: this.props.price,
-            name: '',
-            email: '',
-            address: {
-                street: '',
-                zipCode: '',
-            }
+            orderData: formData
         }
         axios.post('/orders.json', order)
             .then(response => { 
@@ -38,14 +67,38 @@ class ContactData extends Component {
             } );
     }
 
+    inputChangedHandler = (event, inputId) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = {
+            ...updatedOrderForm[inputId]
+        };
+        updatedFormElement.value = event.target.value;
+        updatedOrderForm[inputId] = updatedFormElement;
+        this.setState({orderForm: updatedOrderForm}); 
+    }
+
     render () {
+        const formElementsArray =[];
+        for ( let key in this.state.orderForm ) {
+            formElementsArray.push({
+                id: key,
+                config: this.state.orderForm[key]
+            });
+        }
+
         let form = ( 
-            <form>
-                <input className={styles.Input}type="text" name="name" placeholder="Your Name" />
-                <input className={styles.Input}type="email" name="email" placeholder="Your Email" />
-                <input className={styles.Input}type="text" name="street" placeholder="Street Address" />
-                <input className={styles.Input}type="text" name="zipCode" placeholder="Zip-Code" />
-                <Button btnType="Success" clicked={this.orderHandler}> ORDER </Button>
+            <form onSubmit={this.orderHandler}>
+                {formElementsArray.map(formElement => (
+                    <Input 
+                        key={formElement.id}
+                        elementType={formElement.config.elementType} 
+                        elementConfig={formElement.config.elementConfig} 
+                        value={formElement.config.value}
+                        changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                ))}
+                <Button btnType="Success"> ORDER </Button>
             </form>
         );
         if (this.state.loading) {
